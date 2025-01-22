@@ -1,3 +1,6 @@
+
+import java.lang.classfile.components.ClassPrinter;
+
 /**
  * Represents a managed memory space. The memory space manages a list of allocated 
  * memory blocks, and a list free memory blocks. The methods "malloc" and "free" are 
@@ -57,8 +60,27 @@ public class MemorySpace {
 	 *        the length (in words) of the memory block that has to be allocated
 	 * @return the base address of the allocated block, or -1 if unable to allocate
 	 */
-	public int malloc(int length) {		
-		//// Replace the following statement with your code
+	public int malloc(int length) {	
+		Node current = freeList.getNode(0);
+		while (current != null) {
+			if (current.block.length >= length) { // Find the first free memory block with a length of at least the requested size.
+
+				int baseAddress = current.block.baseAddress;
+				MemoryBlock newBlock = new MemoryBlock(baseAddress, length);
+				allocatedList.addLast(newBlock); // Append the new block to the end 
+				
+				current.block.baseAddress += length;
+				current.block.length -= length;
+
+				if (current.block.length == 0) { 
+					freeList.remove(current);
+				} 
+
+				return newBlock.baseAddress;
+			}
+
+			current = current.next;
+		}
 		return -1;
 	}
 
@@ -71,7 +93,18 @@ public class MemorySpace {
 	 *            the starting address of the block to freeList
 	 */
 	public void free(int address) {
-		//// Write your code here
+		Node freeNode = allocatedList.getFirst();
+
+		while (freeNode != null) {
+			if (freeNode.block.baseAddress == address) {
+				freeList.addFirst(freeNode.block);
+				allocatedList.remove(freeNode.block);
+				break;
+			}
+			freeNode = freeNode.next;
+		}
+
+		System.out.println("The adress was not found in the allocated memory:" + address);
 	}
 	
 	/**
@@ -88,7 +121,20 @@ public class MemorySpace {
 	 * In this implementation Malloc does not call defrag.
 	 */
 	public void defrag() {
-		/// TODO: Implement defrag test
-		//// Write your code here
+	}
+
+	public void sortFreeList() {
+		for (int i = 0; i < freeList.getSize() - 1; i++) {
+			for (int j = 0; j < freeList.getSize() - 1 - i; j++) {
+				MemoryBlock current = (MemoryBlock) freeList.getBlock(j);
+				MemoryBlock next = (MemoryBlock) freeList.getBlock(j + 1);
+	
+				if (current.baseAddress > next.baseAddress) {
+					freeList.add(j, next);
+					freeList.add(j + 1, current);
+				}
+			
+			}
+		}
 	}
 }
