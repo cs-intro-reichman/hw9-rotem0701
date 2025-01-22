@@ -1,6 +1,3 @@
-
-import java.lang.classfile.components.ClassPrinter;
-
 /**
  * Represents a managed memory space. The memory space manages a list of allocated 
  * memory blocks, and a list free memory blocks. The methods "malloc" and "free" are 
@@ -121,6 +118,20 @@ public class MemorySpace {
 	 * In this implementation Malloc does not call defrag.
 	 */
 	public void defrag() {
+		sortFreeList();
+		Node current = freeList.getFirst();
+		while (current != null && current.next != null) {
+			Node nextNode = current.next;
+	
+			if (current.block.baseAddress + current.block.length == nextNode.block.baseAddress) {
+				current.block.length += nextNode.block.length; // Union 
+				
+				freeList.remove(nextNode.block); // Remove the next block
+	
+			} else {
+				current = current.next;
+			}
+		}
 	}
 
 	public void sortFreeList() {
@@ -130,10 +141,13 @@ public class MemorySpace {
 				MemoryBlock next = (MemoryBlock) freeList.getBlock(j + 1);
 	
 				if (current.baseAddress > next.baseAddress) {
-					freeList.add(j, next);
-					freeList.add(j + 1, current);
+					Node currentNode = freeList.getNode(j);
+					Node nextNode = freeList.getNode(j + 1);
+					
+					MemoryBlock temp = currentNode.block;
+					currentNode.block = nextNode.block;
+					nextNode.block = temp;
 				}
-			
 			}
 		}
 	}
