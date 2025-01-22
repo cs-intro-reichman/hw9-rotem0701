@@ -78,7 +78,7 @@ public class MemorySpace {
 
 			current = current.next;
 		}
-		return -1;
+		throw new IllegalArgumentException("index must be between 0 and size");
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class MemorySpace {
 			freeNode = freeNode.next;
 		}
 
-		System.out.println("The adress was not found in the allocated memory:" + address);
+		throw new IllegalArgumentException("index must be between 0 and size");
 	}
 	
 	/**
