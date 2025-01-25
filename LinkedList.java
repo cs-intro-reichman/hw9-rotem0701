@@ -362,7 +362,7 @@ public class LinkedList {
 		String str = "";
 		Node current = first;
 		while (current != null) {
-			res += current.block.toString() + " "; 
+			str += current.block.toString() + " "; 
         	current = current.next; 
 		}
 		return str;
