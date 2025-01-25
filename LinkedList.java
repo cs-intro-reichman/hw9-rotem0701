@@ -110,9 +110,9 @@ public class LinkedList {
 			Node prev = getNode(index - 1);
 			newElement.next = prev.next;
 			prev.next = newElement; 
+			size ++;
 		}
 		
-		size ++;
 	}
 
 	/**
@@ -305,8 +305,8 @@ public class LinkedList {
 			}
 
 			prev.next = current.next; // removing the element at the given index 
-			size--;
-	
+			size --;
+			
 		}
 	}
 
