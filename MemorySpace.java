@@ -78,7 +78,7 @@ public class MemorySpace {
 
 			current = current.next;
 		}
-		throw new IllegalArgumentException("index must be between 0 and size");
+		return -1;
 	}
 
 	/**
@@ -94,8 +94,8 @@ public class MemorySpace {
 
 		while (freeNode != null) {
 			if (freeNode.block.baseAddress == address) {
-				freeList.addFirst(freeNode.block);
 				allocatedList.remove(freeNode.block);
+				freeList.addLast(freeNode.block);
 				break;
 			}
 			freeNode = freeNode.next;
