@@ -118,42 +118,36 @@ public class MemorySpace {
 	 * In this implementation Malloc does not call defrag.
 	 */
 	public void defrag() {
-		if (freeList.getSize() == 0) {
-			return; 
+		if (freeList.getSize() <= 1) {
+			return;
 		}
-		sortFreeList();
-		Node current = freeList.getFirst();
-		while (current != null && current.next != null) {
-			Node nextNode = current.next;
 	
-			if (current.block.baseAddress + current.block.length == nextNode.block.baseAddress) {
-				current.block.length += nextNode.block.length; // Union 
+		Node currentNode = freeList.getFirst();
+		while (currentNode != null) {
+			Node nextNode = currentNode.next;
+			
+			while (nextNode != null) {
+				MemoryBlock currentMemoryBlock = currentNode.block;
+				MemoryBlock nextMemoryBlock = nextNode.block;
+	
+				if (currentMemoryBlock.baseAddress + currentMemoryBlock.length == nextMemoryBlock.baseAddress) {
+					currentMemoryBlock.length += nextMemoryBlock.length;  
+					freeList.remove(nextNode);  
+					nextNode = currentNode.next;  
 				
-				freeList.remove(nextNode.block); // Remove the next block
-	
-			} else {
-				current = current.next;
-			}
-		}
-	}
-
-	public void sortFreeList() {
-		if (freeList.getSize() == 0) {
-			return; 
-		}
-		for (int i = 0; i < freeList.getSize() - 1; i++) {
-			for (int j = 0; j < freeList.getSize() - 1 - i; j++) {
-				MemoryBlock current = (MemoryBlock) freeList.getBlock(j);
-				MemoryBlock next = (MemoryBlock) freeList.getBlock(j + 1);
-	
-				if (current.baseAddress > next.baseAddress) {
-					Node currentNode = freeList.getNode(j);
-					Node nextNode = freeList.getNode(j + 1);
-					
-					MemoryBlock temp = currentNode.block;
-					currentNode.block = nextNode.block;
-					nextNode.block = temp;
+				} else if (nextMemoryBlock.baseAddress + nextMemoryBlock.length == currentMemoryBlock.baseAddress) {
+					nextMemoryBlock.length += currentMemoryBlock.length; 
+					nextMemoryBlock.baseAddress = currentMemoryBlock.baseAddress;  
+					freeList.remove(currentNode); 
+					currentNode = freeList.getFirst();  
+					break;
+				
+				} else {
+					nextNode = nextNode.next;
 				}
+			}
+			if (currentNode != null) {
+				currentNode = currentNode.next;
 			}
 		}
 	}
