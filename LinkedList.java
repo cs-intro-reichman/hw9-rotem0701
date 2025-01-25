@@ -229,13 +229,15 @@ public class LinkedList {
 			if (size == 1) {
 				first = null;
 				last = null;
+				size --;
+
 			}
 			else {
 				Node beforeLast = getNode(size - 2);
 				beforeLast.next = null;
 				last = beforeLast;
+				size --;
 			}
-			size --;
 		}	
 	}
 
@@ -257,7 +259,7 @@ public class LinkedList {
 	 */
 	public void remove(int index) {
 		if (index < 0 || index >= size) {
-			throw new IllegalArgumentException("index must be between 0 and size\"");
+			throw new IllegalArgumentException("index must be between 0 and size");
 		}
 
 		if (size == 0) {
@@ -275,7 +277,7 @@ public class LinkedList {
 		else {
 			Node prev = getNode(index - 1);
 			prev.next = prev.next.next;  
-			size--;
+			size --;
 
 			if (index == size - 1) {
 				last = prev;
