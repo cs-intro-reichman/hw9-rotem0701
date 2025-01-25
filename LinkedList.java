@@ -359,7 +359,7 @@ public class LinkedList {
 		String str = "";
 		Node current = first;
 		while (current != null) {
-			str += current.toString();
+			str += "(" + current.block.baseAddress + " , " + current.block.length + ")";
 			if (current.next != null) {
 				str += " ";
 			}
