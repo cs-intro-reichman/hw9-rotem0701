@@ -214,17 +214,14 @@ public class LinkedList {
 
 		return -1; // The block wasn't found
 	}
-	public void removeFirst () {
+	public void removeFirst() {
 		if (size > 0) {
-			if (size == 1) {
-				first = null;
+			first = first.next; 
+			if (size == 1) { 
 				last = null;
 			}
-			else {
-				first = first.next;
-			}
-			size --;
-		}	
+			size--;
+		}
 	}
 
 	public void removeLast () {
@@ -249,32 +246,7 @@ public class LinkedList {
 	 *        the node that will be removed from this list
 	 */
 	public void remove(Node node) {
-		if (node == null) {
-			throw new IllegalArgumentException("index must be between 0 and size");
-		}
-		if (node == first) {
-			removeFirst();
-		} 
-		
-		else if (node == last) {
-			removeLast();
-		} 
-		
-		else {
-			Node current = first;
-			while (current != null) {
-				if (current.next == node) {
-					current.next = node.next;
-					size --;
-					break;
-				}
-				current = current.next;
-			}
-
-			if (current == null) {
-				throw new IllegalArgumentException("index must be between 0 and size");
-			}
-		}
+		remove(node.block);
 	}
 	/**
 	 * Removes from this list the node which is located at the given index.
@@ -301,17 +273,13 @@ public class LinkedList {
 		}
 
 		else {
-			Node prev = null;
-			Node current = first;
+			Node prev = getNode(index - 1);
+			prev.next = prev.next.next;  
+			size--;
 
-			for (int i = 0; i < index; i++) {
-				prev = current;
-				current = current.next;
-			}
-
-			prev.next = current.next; // removing the element at the given index 
-			size --;
-			
+			if (index == size - 1) {
+				last = prev;
+			}			
 		}
 	}
 
@@ -323,33 +291,14 @@ public class LinkedList {
 	 *         if the given memory block is not in this list
 	 */
 	public void remove(MemoryBlock block) {
-
-		if (block.equals(first.block)) {
-			removeFirst();
-		} 
+		int index = indexOf(block);  
 		
-		else if (block.equals(last.block)) {
-			removeLast();
-		} 
-		
-		else {
-			Node prev = null;
-			Node current = first;
-			while (current != null) {
-				if (current.block.equals(block)) {
-					prev.next = current.next; // skip current 					
-					size --;
-					break;
-				}
-				prev = current;
-				current = current.next;
-			}
-
-			if (current == null || block == null) {
-				throw new IllegalArgumentException("index must be between 0 and size");
-			}
+		if (index == -1) {
+			throw new IllegalArgumentException("Block not found in the list");
 		}
-	}		
+		remove(index);  
+	}
+			
 
 	/**
 	 * Returns an iterator over this list, starting with the first element.
