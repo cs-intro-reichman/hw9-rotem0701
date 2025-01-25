@@ -271,7 +271,7 @@ public class LinkedList {
 				current = current.next;
 			}
 
-			if (current == null || node == null) {
+			if (current == null) {
 				throw new IllegalArgumentException("index must be between 0 and size");
 			}
 		}
@@ -285,8 +285,11 @@ public class LinkedList {
 	 */
 	public void remove(int index) {
 		if (index < 0 || index >= size) {
-			throw new IllegalArgumentException(
-					" NullPointerException!");
+			throw new IllegalArgumentException("index must be between 0 and size\"");
+		}
+
+		if (size == 0) {
+			return;
 		}
 
 		if (index == 0) { // remove the first element 
