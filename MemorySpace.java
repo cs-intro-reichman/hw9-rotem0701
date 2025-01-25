@@ -58,25 +58,25 @@ public class MemorySpace {
 	 * @return the base address of the allocated block, or -1 if unable to allocate
 	 */
 	public int malloc(int length) {	
-		Node current = freeList.getNode(0);
-		while (current != null) {
-			if (current.block.length >= length) { // Find the first free memory block with a length of at least the requested size.
+		ListIterator iterator = freeList.iterator();
+		while (iterator.hasNext()) {
+			if (iterator.current.block.length >= length) { // Find the first free memory block with a length of at least the requested size.
 
-				int baseAddress = current.block.baseAddress;
+				int baseAddress = iterator.current.block.baseAddress;
 				MemoryBlock newBlock = new MemoryBlock(baseAddress, length);
 				allocatedList.addLast(newBlock); // Append the new block to the end 
 				
-				current.block.baseAddress += length;
-				current.block.length -= length;
+				iterator.current.block.baseAddress += length;
+				iterator.current.block.length -= length;
 
-				if (current.block.length == 0) { 
-					freeList.remove(current);
+				if (iterator.current.block.length == 0) { 
+					freeList.remove(iterator.current);
 				} 
 
 				return newBlock.baseAddress;
 			}
 
-			current = current.next;
+			iterator.next();
 		}
 		return -1;
 	}
@@ -90,15 +90,15 @@ public class MemorySpace {
 	 *            the starting address of the block to freeList
 	 */
 	public void free(int address) {
-		Node freeNode = allocatedList.getFirst();
+		ListIterator iterator = allocatedList.iterator();
 
-		while (freeNode != null) {
-			if (freeNode.block.baseAddress == address) {
-				allocatedList.remove(freeNode.block);
-				freeList.addLast(freeNode.block);
+		while (iterator.hasNext()) {
+			if (iterator.current.block.baseAddress == address) {
+				allocatedList.remove(iterator.current.block);
+				freeList.addLast(iterator.current.block);
 				break;
 			}
-			freeNode = freeNode.next;
+			iterator.next();
 		}
 
 		throw new IllegalArgumentException("index must be between 0 and size");
