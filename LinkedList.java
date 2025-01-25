@@ -249,7 +249,6 @@ public class LinkedList {
 	 *        the node that will be removed from this list
 	 */
 	public void remove(Node node) {
-		
 		if (node == first) {
 			removeFirst();
 		} 
@@ -284,7 +283,7 @@ public class LinkedList {
 	public void remove(int index) {
 		if (index < 0 || index >= size) {
 			throw new IllegalArgumentException(
-					"index must be between 0 and size");
+					" NullPointerException!");
 		}
 
 		if (index == 0) { // remove the first element 
