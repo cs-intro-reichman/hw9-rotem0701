@@ -214,31 +214,7 @@ public class LinkedList {
 
 		return -1; // The block wasn't found
 	}
-	public void removeFirst() {
-		if (size > 0) {
-			first = first.next; 
-			if (size == 1) { 
-				last = null;
-			}
-			size--;
-		}
-	}
 
-	public void removeLast () {
-		if (size > 0) {
-			if (size == 1) {
-				first = null;
-				last = null;
-				size --;
-			}
-			else {
-				Node beforeLast = getNode(size - 2);
-				beforeLast.next = null;
-				last = beforeLast;
-				size --;
-			}
-		}	
-	}
 
 	/**
 	 * Removes the given node from this list.	
@@ -266,22 +242,24 @@ public class LinkedList {
 		}
 
 		if (index == 0) { // remove the first element 
-			removeFirst();
-		} 
-		
-		else if (index == size - 1) { // remove the last element 
-			removeLast();
+			first = first.next; 
+
+			if (size == 1) { 
+				last = null;
+			}
+
+			size--;
+			return;
+		}
+			
+		Node prev = getNode(index - 1);
+		prev.next = prev.next.next;
+
+		if (index == size - 1) { // remove the last element 
+			last = prev;
 		}
 
-		else {
-			Node prev = getNode(index - 1);
-			prev.next = prev.next.next;  
-			size --;
-
-			if (index == size - 1) {
-				last = prev;
-			}			
-		}
+		size --;
 	}
 
 	/**
